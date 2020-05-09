@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ewf-pubsub-filter
+  labels:
+    app: ewf-pubsub-filter
+    team: wef
+  namespace: wef
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: ewf-pubsub-filter
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: ewf-pubsub-filter
+    spec:
+      containers:
+        - name: ewf-pubsub-filter
+          envFrom:
+            - configMapRef:
+                name: ewf-pubsub-filter
+          image: eu.gcr.io/GCR/pubsub-filter:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          resources:
+            requests:
+              memory: "2"
+              cpu: "2"
+            limits:
+              memory: "2"
+              cpu: "2"
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 10
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 2
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ewf-pubsub-filter
+  labels:
+    app: ewf-pubsub-filter
+    team: wef
+  namespace: wef
+data:
+  NAMESPACE: production
+  SERVICE_ACCOUNT: sk
+  APP_NAME: ewf-pubsub-filter
+  FILTER_CONFIG: ewogICJpbnB1dEdyb3VwcyI6IFt7CiAgICAgICJmaWx0ZXJMYWJlbHMiOiBbIkV2ZW50QSJdLAogICAgICAic3Vic2NyaXB0aW9uIjogInNvbWUtQSIKICAgIH0sCiAgICB7CiAgICAgICJmaWx0ZXJMYWJlbHMiOiBbIkNvbW11bmljYXRpb25Jc3N1ZWQiXSwKICAgICAgInN1YnNjcmlwdGlvbiI6ICJzb21lLUIiCiAgICB9CiAgXSwKICAib3V0cHV0VG9waWMiOiAic2luZ2xlLW91dHB1dC10b3BpYyIsCiAgInZlcnNpb24iOiAidjEiCn0K
+  SENTRY_DSN: wefwerf
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ewf-pubsub-filter
+  namespace: wef
+  labels:
+    app: ewf-pubsub-filter
+  team: wef
+spec:
+  minReplicas: 3
+  maxReplicas: 18
+  scaleTargetRef:
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    name: ewf-pubsub-filter
+  targetCPUUtilizationPercentage: 50

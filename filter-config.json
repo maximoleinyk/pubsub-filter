@@ -1,0 +1,13 @@
+{
+  "inputGroups": [{
+      "filterLabels": ["EventA"],
+      "subscription": "some-A"
+    },
+    {
+      "filterLabels": ["CommunicationIssued"],
+      "subscription": "some-B"
+    }
+  ],
+  "outputTopic": "single-output-topic",
+  "version": "v1"
+}

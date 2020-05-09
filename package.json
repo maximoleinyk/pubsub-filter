@@ -1,0 +1,38 @@
+{
+  "name": "pubsub-filter",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:maximoleinyk/pubsub-filter.git",
+  "author": "Maksym Oliinyk <maxim.oleinyk@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "rm -rf ./dist/ && tsc && cp -r ./src/cli/templates/ ./dist/cli/templates/",
+    "start:cli": "node dist/cli/index.js",
+    "start:pubsub": "gcloud beta emulators pubsub start",
+    "start:filter": "node dist/index.js",
+    "start": "yarn build && concurrently \"yarn start:pubsub\" \"$(gcloud beta emulators pubsub env-init) && yarn start:filter\""
+  },
+  "dependencies": {
+    "@google-cloud/pubsub": "^1.7.3",
+    "dotenv": "^8.2.0",
+    "inquirer": "^7.1.0",
+    "mkdirp": "^1.0.4",
+    "promisify": "^0.0.3",
+    "ramda": "^0.27.0",
+    "yaml": "^1.9.2"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^6.5.0",
+    "@types/mkdirp": "^1.0.0",
+    "@types/node": "^13.13.4",
+    "@types/ramda": "^0.27.4",
+    "@types/yaml": "^1.9.7",
+    "concurrently": "^5.2.0",
+    "prettier": "^2.0.5",
+    "tslint": "^6.1.2",
+    "tslint-config-airbnb": "^5.11.2",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-plugin-prettier": "^2.3.0",
+    "typescript": "^3.8.3"
+  }
+}
