@@ -36,10 +36,15 @@ const QUESTION_RELEVANCE_MAPPING: {
       ['spec', 'scaleTargetRef', 'name'],
     ],
   },
+  PROJECT_ID: {
+    deployment: [['spec', 'template', 'spec', 'containers', 0, 'image']],
+    configmap: [],
+    hpa: [],
+  },
   TEAM_NAME: {
     deployment: [['metadata', 'labels', 'team']],
     configmap: [['metadata', 'labels', 'team']],
-    hpa: [['metadata', 'team']],
+    hpa: [['metadata', 'labels', 'team']],
   },
   NAMESPACE: {
     deployment: [['metadata', 'namespace']],
@@ -47,14 +52,14 @@ const QUESTION_RELEVANCE_MAPPING: {
     hpa: [['metadata', 'namespace']],
   },
   MAX_REPLICAS: {
-    deployment: [['spec', 'maxReplicas']],
+    deployment: [],
     configmap: [],
-    hpa: [],
+    hpa: [['spec', 'maxReplicas']],
   },
   CPU_THRESHOLD: {
-    deployment: [['spec', 'targetCPUUtilizationPercentage']],
+    deployment: [],
     configmap: [],
-    hpa: [],
+    hpa: [['spec', 'targetCPUUtilizationPercentage']],
   },
   REQUESTS_CPU: {
     deployment: [

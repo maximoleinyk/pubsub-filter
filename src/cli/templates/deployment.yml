@@ -23,13 +23,25 @@ spec:
     spec:
       containers:
         - name: default
+          image: eu.gcr.io/org/pubsub-filter:latest
           envFrom:
             - configMapRef:
                 name: default
-          image: eu.gcr.io/GCR/pubsub-filter:latest
           imagePullPolicy: Always
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            failureThreshold: 3
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            failureThreshold: 3
           ports:
-            - containerPort: 80
+            - containerPort: 8080
               protocol: TCP
           resources:
             requests:

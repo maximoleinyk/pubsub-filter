@@ -3,7 +3,7 @@ import { IPCMessage } from '../interfaces';
 
 let processor: any;
 
-process.on('message', async (msg: IPCMessage) => {
+const onMessage = async (msg: IPCMessage) => {
   switch (msg.cmd) {
     case 'INIT':
       processor = require(msg.value);
@@ -45,4 +45,22 @@ process.on('message', async (msg: IPCMessage) => {
       // do nothing;
       break;
   }
-});
+};
+process.on('message', onMessage);
+
+const onUncaughtException = (e: Error) => {
+  console.error(`${process.pid} uncaught exception.`, e);
+
+  // re-throw
+  throw e;
+};
+process.on('uncaughtException', onUncaughtException);
+
+const onExit = () => {
+  process.removeListener('uncaughtException', onUncaughtException);
+  process.removeListener('message', onMessage);
+  process.removeListener('exit', onExit);
+
+  console.info(`${process.pid} exiting...`);
+};
+process.on('exit', onExit);

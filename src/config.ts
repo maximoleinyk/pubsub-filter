@@ -1,8 +1,14 @@
 import * as R from 'ramda';
 
 interface Config {
+  app: AppConfig;
   pubSubKey: ServiceAccountKey;
   filterConfig: FilterConfig;
+}
+
+interface AppConfig {
+  name: string;
+  tcpPort: number;
 }
 
 interface FilterConfig {
@@ -77,18 +83,24 @@ const getFilterConfig = R.compose(
 );
 
 const getSentryDSN = getOrError('SENTRY_DSN');
+const appConfig = R.converge(
+  (name: string, tcpPort: number) => ({ name, tcpPort }),
+  [getOrError('APP_NAME'), getOrError('TCP_PORT')],
+);
 
 const getConfig = R.converge(
   (
+    app: AppConfig,
     pubSubKey: ServiceAccountKey,
     filterConfig: FilterConfig,
     sentryDSN: string,
   ) => ({
+    app,
     pubSubKey,
     filterConfig,
     sentryDSN,
   }),
-  [getPubSubKey, getFilterConfig, getSentryDSN],
+  [appConfig, getPubSubKey, getFilterConfig, getSentryDSN],
 );
 
 export { Config, ProcessConfig, InputGroup, getConfig };

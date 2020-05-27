@@ -49,6 +49,7 @@ const main = async (process: NodeJS.Process) => {
     const processConfig = applyAnswers({
       ...answers,
       APP_NAME: `${answers.APP_NAME}-${APP_NAME}`,
+      PROJECT_ID: `eu.gcr.io/${answers.PROJECT_ID}/pubsub-filter:latest`,
       FILTER_CONFIG: config,
     });
     const jsonObjects = await Promise.all(YAML_LIST.map(processConfig));

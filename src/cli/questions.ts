@@ -3,6 +3,7 @@ import { PromptModule, Answers } from 'inquirer';
 
 type Question =
   | 'APP_NAME'
+  | 'PROJECT_ID'
   | 'TEAM_NAME'
   | 'NAMESPACE'
   | 'MAX_REPLICAS'
@@ -25,6 +26,13 @@ const askQuestions = async (
       type: 'input',
       message: 'Service name (i.e. app-name):',
       suffix: `-${config.appName}`,
+    },
+    {
+      name: 'PROJECT_ID',
+      type: 'input',
+      message: 'GCP Project ID (i.e. bulb-platform-dev-fd41):',
+      default: 'bulb-platform-dev-fd41',
+      validate: (v: string) => !!v,
     },
     {
       name: 'TEAM_NAME',
