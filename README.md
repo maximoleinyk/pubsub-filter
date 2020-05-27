@@ -124,6 +124,3 @@ In terms of topics we would need:
 - three input topics (with subscriptions) that would be used by the pubsub-filter pods
 - one output topic that would be used by the receiver service pods
 
-## Implementation Details
-
-![Architecture Overview](https://github.com/maximoleinyk/pubsub-filter/blob/master/image2.png 'Architecture Overview')
